@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+tts_server_venv
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+
+# Data and temporary files
+chroma_db/
+generated_audio/
+temp_audio/
+data/
