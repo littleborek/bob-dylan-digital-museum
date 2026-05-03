@@ -20,7 +20,7 @@ tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 print("XTTS v2 modeli hazır.")
 
 OUTPUT_DIR = "generated_audio"
-SPEAKER_WAV = "dylan_ref.wav"
+SPEAKER_WAV = "bobdylan.wav"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ─── Startup'ta Speaker Embedding'i Hesapla ve Cache'le ───────────────────────

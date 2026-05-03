@@ -47,7 +47,7 @@ async def generate_dylan_voice(text: str):
             # XTTS Sunucusu (Aynı makinede çalışıyor)
             response = await client.post(
                 "http://localhost:8001/generate",
-                json={"text": clean_text, "speaker_wav": "dylan_ref.wav"},
+                json={"text": clean_text, "speaker_wav": "bobdylan.wav"},
                 timeout=120.0
             )
             if response.status_code == 200:

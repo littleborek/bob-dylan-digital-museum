@@ -190,6 +190,18 @@ Historical context in our project is not a superficial reference but a structura
 
 ---
 
+## Challenges and Solutions
+
+Building this digital twin portal was far from a linear path. We encountered several technical thresholds that forced us to rethink our approach:
+
+1. **The Rigging Bottleneck:** Initially, we sourced high-quality 3D models specifically designed to look exactly like Bob Dylan. However, we quickly realized that these models were "dead" — they had no facial rig. Without a complex blendshape system or bone structure for the face, we couldn't make them speak. This led us to our most significant pivot: using **Epic Games' MetaHuman** framework. While it required us to meticulously recreate Dylan's features within the MetaHuman Creator, it provided the high-fidelity rigging necessary for real-time AI-driven animation.
+
+2. **Facial Performance at Scale:** Even with a rigged character, making it respond to audio in real-time was a hurdle. We moved away from traditional lip-sync techniques to **NVIDIA Audio2Face 3**. Integrating this into the MetaHuman AnimBPMH workflow required balancing visual realism with the performance constraints of a distributed network.
+
+3. **Orchestrating a Distributed System:** Our project is a "frankenstein" of different operating systems and hardware. The logic runs on macOS, the 3D world on Windows, and the AI models on a remote GPU. Connecting these via **Tailscale VPN** and ensuring that a voice request from the browser travels through five different AI models and two machines to result in a lip-synced response in Unreal Engine was a massive networking and latency challenge.
+
+---
+
 ## Team Contributions
 
 **Eray Soydal (20230808605):**
