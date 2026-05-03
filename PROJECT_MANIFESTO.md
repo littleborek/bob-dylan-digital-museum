@@ -253,7 +253,7 @@ https://github.com/user-attachments/assets/1e5c54fc-949e-4c39-bee1-45dec3b4bef2
 
 <img width="1128" height="703" alt="resim" src="https://github.com/user-attachments/assets/b67e4e57-f673-4541-9502-b3d261e9a118" />
 
-https://github.com/user-attachments/assets/b69de2c5-0303-4dd5-b3d7-c1dfd2bacea8
+
 
 
 
