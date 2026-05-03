@@ -1,80 +1,55 @@
 """
-UE Bridge — Dylan AI Ses Köprüsü (Sıfır Bağımlılık)
-Sadece Python standart kütüphaneleri kullanır.
-UE makinesinde (100.69.114.80) çalıştır:
-    python3 ue_bridge.py
+UE Bridge — Dylan AI ses köprüsü
+Bu script UE makinesinde çalışır.
+Backend WAV gönderince onu belirtilen klasöre kaydeder.
+UE bu klasördeki yeni WAV'ı algılayıp lip sync yapar.
 """
 import os
-import json
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import cgi
+import uvicorn
+from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 
-AUDIO_DIR = os.path.expanduser("~/dylan_audio")
+app = FastAPI(title="UE Audio Bridge")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# WAV dosyalarının kaydedileceği klasör
+AUDIO_DIR = os.path.join(os.getcwd(), "C:/Users/Eray/Downloads/Video")
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
-class BridgeHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        if self.path == "/speak":
-            content_type = self.headers.get("Content-Type", "")
-            
-            if "multipart/form-data" in content_type:
-                form = cgi.FieldStorage(
-                    fp=self.rfile,
-                    headers=self.headers,
-                    environ={"REQUEST_METHOD": "POST", "CONTENT_TYPE": content_type}
-                )
-                
-                # WAV dosyasını kaydet
-                audio_field = form["audio"]
-                audio_data = audio_field.file.read()
-                wav_path = os.path.join(AUDIO_DIR, "dylan_speak.wav")
-                with open(wav_path, "wb") as f:
-                    f.write(audio_data)
-                
-                # Metni kaydet
-                text = form.getvalue("text", "")
-                txt_path = os.path.join(AUDIO_DIR, "dylan_speak.txt")
-                with open(txt_path, "w") as f:
-                    f.write(text)
-                
-                print(f"🎙️  Audio received: {len(audio_data)} bytes")
-                print(f"    Text: {text[:80]}")
-                print(f"    Saved: {wav_path}")
-                
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"status": "ok"}).encode())
-            else:
-                self.send_response(400)
-                self.end_headers()
-                self.wfile.write(b"Bad request")
-        else:
-            self.send_response(404)
-            self.end_headers()
+@app.post("/speak")
+async def receive_audio(
+    audio: UploadFile = File(...),
+    text: str = Form(default="")
+):
+    """Backend'den gelen WAV dosyasını kaydet."""
+    # Her zaman aynı dosya adına kaydet (UE sürekli bunu okusun)
+    output_path = os.path.join(AUDIO_DIR, "as.wav")
     
-    def do_GET(self):
-        if self.path == "/health":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "running"}).encode())
-        else:
-            self.send_response(404)
-            self.end_headers()
+    with open(output_path, "wb") as f:
+        content = await audio.read()
+        f.write(content)
     
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "*")
-        self.end_headers()
+    # Metni de kaydet (UE subtitle göstermek isterse)
+    text_path = os.path.join(AUDIO_DIR, "dylan_speak.txt")
+    with open(text_path, "w", encoding="utf-8") as f:
+        f.write(text)
+    
+    print(f"🎙️ New audio received: {len(content)} bytes")
+    print(f"   Text: {text[:80]}...")
+    print(f"   Saved to: {output_path}")
+    
+    return {"status": "ok", "message": "Audio saved for UE playback"}
+
+@app.get("/health")
+async def health():
+    return {"status": "running", "audio_dir": AUDIO_DIR}
 
 if __name__ == "__main__":
-    port = 8500
-    server = HTTPServer(("0.0.0.0", port), BridgeHandler)
-    print(f"🌉 UE Bridge running on 0.0.0.0:{port}")
-    print(f"📁 Audio will be saved to: {AUDIO_DIR}")
-    print(f"   Waiting for Dylan's voice...")
-    server.serve_forever()
+    # 0.0.0.0 dinleyerek dışarıdan (Mac'ten) gelen istekleri kabul ederiz
+    uvicorn.run(app, host="0.0.0.0", port=8500)
