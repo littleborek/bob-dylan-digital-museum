@@ -1,232 +1,150 @@
-# 🎸 Bob Dylan AI Portal
+# 🎸 Bob Dylan AI Portal: Setup Guide
 
-A multi-layered AI portal that brings Bob Dylan to life — visually, intellectually, and vocally — using cutting-edge AI technologies.
+Welcome to the **Bob Dylan AI Portal**. This project is a multi-layered "Digital Twin" and "Poetic Museum" designed to bring the spirit of Bob Dylan to life using distributed AI systems.
 
-![Dylan AI](https://img.shields.io/badge/Dylan-AI-c4983a?style=for-the-badge) ![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge) ![UE5](https://img.shields.io/badge/Unreal_Engine-5.6.1-black?style=for-the-badge)
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    BROWSER (Frontend)                        │
-│  ┌─────────────────┐  ┌──────────────────────────────────┐  │
-│  │  Pixel Streaming │  │         Chat Panel               │  │
-│  │  (iframe → UE5)  │  │  Text + Voice input → AI reply   │  │
-│  │  Press T to talk │  │                                  │  │
-│  └─────────────────┘  └──────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────────────┐│
-│  │              Dylan Lens Gallery                           ││
-│  │  Random pre-loaded images • Shuffle to explore           ││
-│  │  LLaVA interpretation → ComfyUI vintage reimagining      ││
-│  └──────────────────────────────────────────────────────────┘│
-└──────────────┬──────────────────────────┬───────────────────┘
-               │                          │
-        ┌──────▼──────┐           ┌───────▼───────┐
-        │  main.py    │           │ gallery_server │
-        │  Port 8000  │           │   Port 8002    │
-        │  Chat API   │           │  Gallery API   │
-        └──────┬──────┘           └───────┬───────┘
-               │                          │
-    ┌──────────▼──────────┐    ┌──────────▼──────────┐
-    │   LangGraph Agent   │    │     LLaVA (Vision)  │
-    │   + RAG + Wikipedia │    │     + ComfyUI (SD)  │
-    │   (Mistral Nemo)    │    │                     │
-    └──────────┬──────────┘    └─────────────────────┘
-               │
-    ┌──────────▼──────────┐    ┌─────────────────────┐
-    │   XTTS v2 (TTS)    │───▶│   UE Bridge (8500)  │
-    │   Port 8001         │    │   → Lip Sync WAV    │
-    │   Dylan Voice Clone │    │   → Audio2Face 3    │
-    └─────────────────────┘    │   → MetaHuman Rig   │
-                               └─────────────────────┘
-```
+This guide is written for anyone—even if you've never used these tools before—to help you set up the entire ecosystem from scratch.
 
 ---
 
-## ✨ Features
+## 👁️ What is this Project?
 
-### 🤖 AI Chatbot
-- **Brain:** LangGraph agent with RAG (ChromaDB) + Wikipedia search
-- **LLM:** Mistral Nemo Instruct (via LM Studio)
-- **Voice:** XTTS v2 voice cloning — speaks in Dylan's voice
-- **3D Character:** MetaHuman Rig in Unreal Engine 5.6.1 via Pixel Streaming
-- **Facial Animation:** NVIDIA Audio2Face 3 driving MetaHuman AnimBPMH workflow
-- **Keyboard Shortcut:** Press **T** to talk to the 3D Bob Dylan character
-
-### 🎨 Dylan Lens Gallery
-- **Instant loading:** 4 random pre-processed images displayed on page load — no waiting
-- **Shuffle button:** Click to get a fresh random set of images from the archive
-- **LLaVA** interprets each image with a poetic Dylan-style quote
-- **ComfyUI (Stable Diffusion)** reimagines photos in 1960s vintage style
-- Hover over any card to reveal the "Dylan Lens" reimagined version
-
-### 🎙️ Voice Input
-- Record voice messages via browser microphone
-- Whisper STT transcription → AI response → Dylan voice reply
+This isn't just a chatbot. It is a **distributed AI experience** consisting of:
+1.  **The Digital Twin**: A 3D MetaHuman (Unreal Engine) that talks to you in Dylan's cloned voice, with lips and expressions driven by AI in real-time.
+2.  **The Dylan Lens Gallery**: A digital museum that takes modern photos, interprets them through "Dylan's eyes" (Vision AI), and reimagines them as 1960s vintage film photography (Generative AI).
 
 ---
 
-## 📁 Project Structure
+## 🏗️ System Architecture (The "Frankenstein" Setup)
 
-```
-bob-dylan/
-├── main.py                 # Chat backend (FastAPI, port 8000)
-├── agent.py                # LangGraph agent (Mistral Nemo + tools)
-├── rag.py                  # RAG / ChromaDB vector store
-├── stt_service.py          # Whisper speech-to-text
-├── tts_server.py           # XTTS v2 voice server (port 8001)
-├── gallery_server.py       # Gallery backend (FastAPI, port 8002)
-├── ue_bridge.py            # UE audio bridge (port 8500)
-├── dylan_ref.wav           # Dylan voice reference for cloning
-├── .env                    # API keys & service URLs
-├── gallery-frontend/       # Web frontend
-│   ├── index.html
-│   ├── main.css
-│   └── main.js
-├── chroma_db/              # Vector database
-├── data/                   # Dylan knowledge base
-├── generated_audio/        # TTS output WAV files
-├── gallery_images/         # Downloaded & processed gallery images
-├── tts_server_venv/        # Python 3.11 venv for XTTS
-└── Bob-Dylan-artroom/      # 3D artroom assets
-```
+Because this project requires heavy AI processing, it usually runs across **multiple machines** connected via a virtual private network (**Tailscale**):
+
+*   **Mac/Linux (The Brain):** Runs the main logic, the Chat API, the Gallery API, and the Voice Cloning server.
+*   **Windows GPU PC (The Eyes & Body):** Runs Unreal Engine 5 (3D Graphics), LM Studio (Language Models), and ComfyUI (Image Generation).
 
 ---
 
-## 🚀 Quick Start
+## 🛠️ Prerequisites
 
-### Prerequisites
-- **macOS** with Python 3.12 + `uv` package manager
-- **Remote GPU machine** (Tailscale VPN) running:
-  - LM Studio (Mistral Nemo + LLaVA models)
-  - ComfyUI (Stable Diffusion)
-  - Unreal Engine 5.6.1 (Pixel Streaming, MetaHuman, Audio2Face 3)
+Before you start, make sure you have:
+1.  **Hardware:** A PC with a modern NVIDIA GPU (RTX 3060 or better) is highly recommended for the AI models.
+2.  **Tailscale:** Install [Tailscale](https://tailscale.com/) on all machines so they can "see" each other securely.
+3.  **Python:** 
+    *   **Python 3.12** for the main logic.
+    *   **Python 3.11** specifically for the Voice Cloning (XTTS) server.
+4.  **Package Manager:** Install [uv](https://github.com/astral-sh/uv) (it's a much faster way to handle Python projects).
+    *   *Mac command:* `brew install uv`
+    *   *Windows/Linux:* See [uv docs](https://github.com/astral-sh/uv).
 
-### 1. Configure Environment
+---
+
+## 🚀 Step-by-Step Installation
+
+### 1. Clone the Repository
+Open your terminal and run:
 ```bash
-cp .env.example .env
-# Edit .env with your IPs and API keys
+git clone https://github.com/littleborek/bob-dylan-chatbot.git
+cd bob-dylan-chatbot
 ```
 
-`.env` variables:
-```env
-LMSTUDIO_BASE=http://<GPU_MACHINE_IP>:1234
-LMSTUDIO_MODEL=llava-1.6-mistral-7b
-COMFYUI_BASE=http://<GPU_MACHINE_IP>:8188
-GOOGLE_API_KEY=<optional>
-GOOGLE_CSE_ID=<optional>
-```
+### 2. Set Up Python Environments
+This project uses two different Python versions.
 
-### 2. Start Services (4 Terminals)
-
+**A. Main Environment (Python 3.12):**
 ```bash
-# Terminal 1: TTS Voice Server (Python 3.11 venv)
+uv venv --python 3.12
+source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+uv pip install -e .        # Installs all dependencies from pyproject.toml
+```
+
+**B. TTS Environment (Python 3.11):**
+Coqui XTTS (the voice cloner) *requires* Python 3.11.
+```bash
+# Create a separate folder for the TTS venv
+uv venv tts_server_venv --python 3.11
+source tts_server_venv/bin/activate
+uv pip install TTS fastapi uvicorn  # Basic requirements for the voice server
+```
+
+### 3. Configure Your Environment Variables
+You need a `.env` file to tell the Mac where the GPU PC is.
+1.  Copy the example: `cp .env.example .env` (or create a file named `.env`).
+2.  Open `.env` in a text editor and update the IPs:
+    ```env
+    # Replace these IPs with your GPU PC's Tailscale IP
+    LMSTUDIO_BASE=http://100.95.111.63:1234
+    COMFYUI_BASE=http://100.95.111.63:8188
+    
+    # Optional: For Google Image search in the gallery
+    GOOGLE_API_KEY=your_key_here
+    GOOGLE_CSE_ID=your_id_here
+    ```
+
+---
+
+## 🛰️ Preparing the Remote Services (GPU PC)
+
+On your **Windows/GPU Machine**, you need to have three things running:
+
+1.  **LM Studio:** 
+    *   Load **Mistral Nemo Instruct** (for chat).
+    *   Load **LLaVA 1.6** (for vision).
+    *   Start the "Local Server" on port `1234`.
+2.  **ComfyUI:**
+    *   Start ComfyUI with the `--listen 0.0.0.0` flag so the Mac can reach it.
+    *   Ensure you have the **DreamShaper v8** model in your models folder.
+3.  **Unreal Engine 5:**
+    *   Open the `Bob-Dylan-artroom` project.
+    *   Ensure **Pixel Streaming** is active.
+    *   Run `python ue_bridge.py` (this script receives audio from the Mac and sends it to Dylan's lips).
+
+---
+
+## 🏃 Running the Portal
+
+You will need **three terminal windows** open on your Mac:
+
+### Terminal 1: Voice Cloning (XTTS)
+```bash
 ./tts_server_venv/bin/python tts_server.py
+```
+*Wait until you see "TTS Server running on port 8001".*
 
-# Terminal 2: Chat Backend
+### Terminal 2: Main Chat Backend
+```bash
 uv run uvicorn main:app --host 0.0.0.0 --port 8000
+```
+*This handles the "Brain" (LangGraph) and RAG system.*
 
-# Terminal 3: Gallery Backend + Frontend
+### Terminal 3: Gallery & Frontend
+```bash
 uv run uvicorn gallery_server:app --host 0.0.0.0 --port 8002
-
-# Terminal 4 (on UE machine): Audio Bridge
-python3 ue_bridge.py
 ```
-
-### 3. Open in Browser
-```
-http://localhost:8002
-```
-
-For Tailscale access from other devices:
-```
-http://<YOUR_TAILSCALE_IP>:8002
-```
+*This serves the website you see in your browser.*
 
 ---
 
-## 🎮 Controls
+## 🎮 How to Use
 
-| Key / Action | Description |
-|-------------|-------------|
-| **T** | Talk to the 3D Bob Dylan character (Pixel Streaming) |
-| **Enter** | Send chat message |
-| **🎤 Mic Button** | Record voice message |
-| **Shuffle Gallery** | Load a new random set of 4 images |
-| **Hover on Card** | Reveal the Dylan Lens reimagined version |
-| **Click on Card** | Open full lightbox comparison view |
-| **Esc** | Close lightbox |
+1.  Open your browser to: `http://localhost:8002`
+2.  **Interact:**
+    *   **Chat:** Type in the box or click the **Mic 🎤** to talk.
+    *   **Digital Twin:** Press the **'T'** key on your keyboard to trigger the "Talk to Dylan" mode in the 3D view.
+    *   **Gallery:** Click **Shuffle Gallery** to see new AI-reimagined photos.
+    *   **Hover:** Hover your mouse over any image in the gallery to see the "Dylan Lens" (the AI-transformed version).
 
 ---
 
-## 🔧 Service Ports
+## 🆘 Troubleshooting
 
-| Service | Port | Machine | Purpose |
-|---------|------|---------|---------|
-| Chat API | 8000 | Mac | LangGraph agent + TTS orchestration |
-| TTS (XTTS v2) | 8001 | Mac | Dylan voice synthesis |
-| Gallery API | 8002 | Mac | Image search + processing + frontend |
-| LM Studio | 1234 | GPU PC | Mistral Nemo + LLaVA inference |
-| ComfyUI | 8188 | GPU PC | Stable Diffusion img2img |
-| Pixel Streaming | 80 | GPU PC | Unreal Engine 3D character |
-| UE Bridge | 8500 | GPU PC | Audio relay for lip sync |
+*   **"Connection Refused":** Make sure Tailscale is connected on BOTH machines and that the IPs in your `.env` match.
+*   **No Sound/Lips not moving:** Check Terminal 4 on the Windows machine (`ue_bridge.py`). It must be running to "bridge" the audio to Unreal Engine.
+*   **XTTS Errors:** Ensure you are using `tts_server_venv` which must be Python 3.11. XTTS will fail on Python 3.12.
+*   **Images not loading:** The gallery requires either a Google Search API key OR it will fall back to random test images. Check your `.env`.
 
 ---
 
-## 🌐 Network (Tailscale)
-
-| Device | Tailscale IP | Role |
-|--------|-------------|------|
-| MacBook | 100.66.237.18 | Backend host |
-| GPU Desktop | 100.95.111.63 | LM Studio + ComfyUI |
-| UE Machine | 100.69.114.80 | Pixel Streaming + Bridge |
-
----
-
-## 🔗 API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Redirects to gallery frontend |
-| `/gallery` | GET | Serves the frontend |
-| `/health` | GET | Health check (LM Studio + ComfyUI status) |
-| `/gallery-stream` | GET | SSE pipeline: search → download → interpret → reimagine |
-| `/random-gallery` | GET | Returns random pre-processed images for instant display |
-| `/chat` | POST | Send text message, get AI response + audio |
-| `/voice-chat` | POST | Send voice recording, get transcription + AI response |
-
----
-
-## 🎵 Tech Stack
-
-- **Backend:** FastAPI, LangGraph, LangChain
-- **LLMs:** Mistral Nemo (chat), LLaVA 1.6 (vision)
-- **TTS:** Coqui XTTS v2 (voice cloning)
-- **STT:** OpenAI Whisper
-- **Image Gen:** ComfyUI + Stable Diffusion (DreamShaper 8)
-- **3D:** Unreal Engine 5.6.1, MetaHuman Rig, Pixel Streaming
-- **Animation:** NVIDIA Audio2Face 3, AnimBPMH workflow
-- **Vector DB:** ChromaDB
-- **Frontend:** Vanilla JS, HTML5, CSS3
-- **Network:** Tailscale VPN
-
----
-
-## 📝 Notes
-
-- TTS server requires **Python 3.11** (Coqui TTS doesn't support 3.12+). Use the dedicated `tts_server_venv/`.
-- ComfyUI must be started with `--listen 0.0.0.0` for remote access.
-- LM Studio needs both **Mistral Nemo** (chat) and **LLaVA** (gallery) models loaded simultaneously.
-- The gallery loads 4 random pre-processed images on startup for instant display. Use the **Shuffle Gallery** button to load new random images.
-- The full SSE pipeline (search → download → interpret → reimagine) is still available via the `/gallery-stream` endpoint.
-- The gallery falls back to [Picsum](https://picsum.photos) test images when no Google API key is configured.
-
----
-
-## 📄 License
-
+## 📜 Credits & License
+Created by **Berk Kocabörek** & **Eray Soydal** for CSE 358.
 This project is for educational and artistic purposes.
 
-> *"The times they are a-changin'"* — Bob Dylan
+> *"He not busy being born is busy dying."* — Bob Dylan
