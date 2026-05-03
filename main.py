@@ -44,16 +44,43 @@ async def generate_dylan_voice(text: str):
             return None
 
         async with httpx.AsyncClient() as client:
+            # XTTS Sunucusu (Aynı makinede çalışıyor)
             response = await client.post(
                 "http://localhost:8001/generate",
                 json={"text": clean_text, "speaker_wav": "dylan_ref.wav"},
-                timeout=120.0  # Ses üretimi CPU'da biraz zaman alıyor
+                timeout=120.0
             )
             if response.status_code == 200:
-                return response.json().get("audio_url")
+                audio_url = response.json().get("audio_url")
+                print(f"-> Ses başarıyla üretildi: {audio_url}")
+                return audio_url
+            else:
+                print(f"-> XTTS Hatası: Sunucu {response.status_code} döndürdü.")
     except Exception as e:
-        print(f"XTTS Sunucusu hatası: {e}")
+        print(f"-> XTTS Sunucusuna bağlanılamadı: {e}")
     return None
+
+UE_BRIDGE_URL = "http://100.69.114.80:8500"
+
+async def send_audio_to_unreal(audio_url: str, text: str):
+    """WAV dosyasını Unreal Engine makinesine gönder."""
+    try:
+        wav_path = os.path.join(GENERATED_DIR, audio_url.split("/")[-1])
+        if not os.path.exists(wav_path):
+            print(f"-> WAV bulunamadı: {wav_path}")
+            return
+        
+        async with httpx.AsyncClient(timeout=30) as client:
+            with open(wav_path, "rb") as f:
+                files = {"audio": (os.path.basename(wav_path), f, "audio/wav")}
+                data = {"text": text}
+                resp = await client.post(f"{UE_BRIDGE_URL}/speak", files=files, data=data)
+                if resp.status_code == 200:
+                    print(f"-> WAV sent to UE successfully!")
+                else:
+                    print(f"-> UE bridge error: {resp.status_code}")
+    except Exception as e:
+        print(f"-> UE bridge connection failed: {e}")
 
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
@@ -70,8 +97,11 @@ async def chat_endpoint(request: ChatRequest):
                             final_message = msg.content
         
         # Sesi üret (Arka planda Dylan konuşsun)
-        # Not: Üretim süresi metnin uzunluğuna göre değişir.
         audio_url = await generate_dylan_voice(final_message)
+        
+        # WAV'ı Unreal Engine makinesine gönder (lip sync için)
+        if audio_url:
+            await send_audio_to_unreal(audio_url, final_message)
         
         return {
             "response": final_message, 
@@ -79,6 +109,9 @@ async def chat_endpoint(request: ChatRequest):
             "status": "success"
         }
     except Exception as e:
+        import traceback
+        print("\n!!! BACKEND ERROR !!!")
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/voice-chat")

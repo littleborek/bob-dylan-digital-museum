@@ -1,0 +1,88 @@
+INFO:     Started server process [14953]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8002 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52756 - "GET /process-archive?limit=10 HTTP/1.1" 200 OK
+Processing archive image: 70818969
+Successfully reimagined 70818969
+Processing archive image: 86e73053
+INFO:     127.0.0.1:52774 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:52780 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+Processing archive image: 7219b52e
+Processing archive image: de45df2b
+Processing archive image: eb7d39ee
+INFO:     100.66.237.18:52782 - "GET /gallery_images/orig_70818969.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:52783 - "GET /gallery_images/sd_70818969.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:52784 - "GET /gallery_images/orig_7219b52e.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:52779 - "GET /health HTTP/1.1" 200 OK
+Successfully reimagined 86e73053
+Processing archive image: 7c9efa4c
+INFO:     127.0.0.1:52797 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:52800 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+Processing archive image: 794da145
+Processing archive image: 9a6d7a90
+INFO:     100.66.237.18:52803 - "GET /gallery_images/sd_70818969.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:52803 - "GET /gallery_images/orig_86e73053.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:52806 - "GET /gallery_images/sd_86e73053.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:52799 - "GET /health HTTP/1.1" 200 OK
+INFO:     100.66.237.18:52806 - "GET /gallery_images/orig_9a6d7a90.jpg HTTP/1.1" 200 OK
+Successfully reimagined de45df2b
+Successfully reimagined 7219b52e
+Successfully reimagined eb7d39ee
+Successfully reimagined 9a6d7a90
+Successfully reimagined 7c9efa4c
+Processing archive image: 61d2620b
+Successfully reimagined 794da145
+Successfully reimagined 61d2620b
+Processing archive image: a01a43ee
+Successfully reimagined a01a43ee
+Processing archive image: 783597ee
+Successfully reimagined 783597ee
+Processing archive image: 5c15960d
+Successfully reimagined 5c15960d
+Processing archive image: aece5e35
+Successfully reimagined aece5e35
+Processing archive image: 893c0fa4
+Successfully reimagined 893c0fa4
+INFO:     127.0.0.1:53021 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53021 - "GET /gallery/main.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53022 - "GET /gallery/main.js HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53027 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53026 - "GET /health HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53030 - "GET /gallery_images/orig_783597ee.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53031 - "GET /gallery_images/sd_783597ee.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53032 - "GET /gallery_images/orig_7c9efa4c.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53030 - "GET /gallery_images/sd_a01a43ee.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53033 - "GET /gallery_images/sd_7c9efa4c.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53034 - "GET /gallery_images/sd_de45df2b.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53035 - "GET /gallery_images/orig_a01a43ee.jpg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53022 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53026 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53027 - "GET /health HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53034 - "GET /gallery_images/sd_70818969.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53034 - "GET /gallery_images/orig_5c15960d.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53031 - "GET /gallery_images/sd_5c15960d.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53034 - "GET /gallery_images/sd_7219b52e.jpg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53048 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53051 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53053 - "GET /gallery_images/sd_86e73053.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53050 - "GET /health HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53053 - "GET /gallery_images/sd_794da145.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53056 - "GET /gallery_images/sd_aece5e35.jpg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53058 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53061 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53060 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53069 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53072 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53074 - "GET /gallery_images/sd_783597ee.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53071 - "GET /health HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53074 - "GET /gallery_images/sd_eb7d39ee.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53076 - "GET /gallery_images/orig_893c0fa4.jpg HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53077 - "GET /gallery_images/sd_893c0fa4.jpg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53082 - "GET /gallery/ HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53082 - "GET /gallery/main.js HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53085 - "GET /random-gallery?count=4 HTTP/1.1" 200 OK
+INFO:     100.66.237.18:53087 - "GET /gallery_images/sd_70818969.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53087 - "GET /gallery_images/sd_a01a43ee.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53089 - "GET /gallery_images/sd_7c9efa4c.jpg HTTP/1.1" 304 Not Modified
+INFO:     100.66.237.18:53084 - "GET /health HTTP/1.1" 200 OK

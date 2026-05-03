@@ -75,7 +75,7 @@ async def generate_voice(request: TTSRequest):
         output_filename = f"{uuid.uuid4()}.wav"
         output_path = os.path.join(OUTPUT_DIR, output_filename)
 
-        # Cache'lenmiş embedding ile doğrudan ses üret (referansı tekrar analiz etmiyor!)
+        # Cache'lenmiş embedding ile doğrudan ses üret
         import torch
         with torch.no_grad():
             out = tts.synthesizer.tts_model.inference(
@@ -83,11 +83,13 @@ async def generate_voice(request: TTSRequest):
                 language=lang,
                 gpt_cond_latent=gpt_cond_latent,
                 speaker_embedding=speaker_embedding,
-                temperature=0.7,
+                temperature=0.5,
                 length_penalty=1.0,
-                repetition_penalty=10.0,
-                top_k=50,
-                top_p=0.85,
+                repetition_penalty=3.0,
+                top_k=30,
+                top_p=0.8,
+                speed=1.1,
+                enable_text_splitting=True,
             )
 
         # Ses dosyasına yaz

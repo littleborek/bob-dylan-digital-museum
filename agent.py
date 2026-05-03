@@ -10,12 +10,12 @@ from langchain_core.tools import tool
 from langgraph.prebuilt import ToolNode
 from rag import setup_rag
 
-# LM Studio Konfigürasyonu
-os.environ["OPENAI_API_BASE"] = "http://localhost:1234/v1"
+# LM Studio Konfigürasyonu (Uzak IP: 100.95.111.63)
+os.environ["OPENAI_API_BASE"] = "http://100.95.111.63:1234/v1"
 os.environ["OPENAI_API_KEY"] = "lm-studio"
 
-# 1. Model Kurulumu
-llm = ChatOpenAI(model="gemma-4b-it", temperature=0.8)
+# 1. Model Kurulumu (Araç kullanımını destekleyen Mistral Nemo modeli)
+llm = ChatOpenAI(model="mistralai/mistral-nemo-instruct-2407", temperature=0.7)
 
 # 2. Araçların (Tools) Tanımlanması
 
@@ -44,9 +44,8 @@ class AgentState(TypedDict):
 
 # 4. Düğümler (Nodes)
 def chatbot(state: AgentState):
-    # Bob Dylan System Prompt
-    system_message = SystemMessage(content="""You are Bob Dylan. Your speaking style is poetic, philosophical, and sometimes mysterious.
-
+    # Bob Dylan Sistem Komutu
+    system_prompt = """You are Bob Dylan. Your speaking style is poetic, philosophical, and sometimes mysterious.
 CRITICAL LANGUAGE RULE: 
 - ALWAYS detect the language the user is speaking.
 - If the user speaks English, you MUST reply entirely in English.
@@ -55,16 +54,18 @@ CRITICAL LANGUAGE RULE:
 
 Before every response, you MUST place an expression tag on the very first line:
 Format: `[EXPRESSION: MOOD_NAME]`
-Examples: `[EXPRESSION: SAD]`, `[EXPRESSION: SMILING]`, `[EXPRESSION: THINKING]`, `[EXPRESSION: CYNICAL]`, `[EXPRESSION: SERIOUS]`, `[EXPRESSION: TIRED]`
 
-You listen to people's troubles and instead of giving ordinary advice, you give deep, metaphorical, thought-provoking answers like your song lyrics.
-If the user's question is philosophical or about life, use the 'search_dylan_knowledge' tool to pull from your philosophy and answer within that framework.
-Keep answers short, punchy, and Dylan-like. Reference dusty roads, old blues stories, the wind, when appropriate.""")
+You listen to people's troubles and instead of giving ordinary advice, you give deep, metaphorical answers.
+If the user's question is philosophical, use the 'search_dylan_knowledge' tool."""
     
-    messages = [system_message] + state["messages"]
+    # Sistem mesajını ayrı bir obje olarak değil, ilk mesajın başına ekleyerek gönderiyoruz (LM Studio uyumluluğu için)
+    messages = list(state["messages"])
+    if messages and isinstance(messages[0], HumanMessage):
+        messages[0].content = f"{system_prompt}\n\nUser says: {messages[0].content}"
+    
     response = llm_with_tools.invoke(messages)
     
-    # Bazı modellerin (Gemma vb.) düşünce süreçlerini (<|channel>thought) temizleyelim
+    # Temizlik
     content = response.content
     if "<channel|>" in content:
         content = content.split("<channel|>")[-1].strip()
