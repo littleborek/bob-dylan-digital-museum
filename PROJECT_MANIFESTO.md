@@ -235,6 +235,28 @@ We designed the door. Now it's time to knock.
 
 ---
 
+
+
+
+
+
+
+
+
+
+https://github.com/user-attachments/assets/1e5c54fc-949e-4c39-bee1-45dec3b4bef2
+
+<img width="1280" height="832" alt="resim" src="https://github.com/user-attachments/assets/95f867fd-3731-4ba4-8bb9-d159ed6f1e60" />
+
+
+<img width="871" height="891" alt="resim" src="https://github.com/user-attachments/assets/908acf2c-884c-40c6-8469-22266d706fd8" />
+
+<img width="1128" height="703" alt="resim" src="https://github.com/user-attachments/assets/b67e4e57-f673-4541-9502-b3d261e9a118" />
+
+https://github.com/user-attachments/assets/b69de2c5-0303-4dd5-b3d7-c1dfd2bacea8
+
+
+
 **References:**
 - Dylan, B. (1973). *Knockin' on Heaven's Door* [Song]. Columbia Records.
 - Peckinpah, S. (Director). (1973). *Pat Garrett & Billy the Kid* [Film]. MGM.
